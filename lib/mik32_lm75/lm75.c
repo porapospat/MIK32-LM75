@@ -4,13 +4,52 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "mik32_lm75/lm75.h"
+#include "lm75.h"
 #include "xprintf.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
+
+/**
+ * @brief             Чтение данных из регистра LM75 по I2C
+ * @param hi2c        Указатель на обработчик I2C
+ * @param device_addr Адрес устройства
+ * @param reg_addr    Адрес регистра
+ * @param data        Буфер для чтения
+ * @param len         Количество байт
+ * @return            Статус операции HAL
+ */
+static HAL_StatusTypeDef lm75_i2c_read_reg(I2C_HandleTypeDef *hi2c, uint8_t device_addr,
+                                           uint8_t reg_addr, uint8_t *data, uint16_t len)
+{
+    HAL_StatusTypeDef status;
+
+    status = HAL_I2C_Master_Transmit(hi2c, device_addr, &reg_addr, 1, I2C_TIMEOUT_DEFAULT);
+    if (status != HAL_OK)
+    {
+        return status;
+    }
+
+    return HAL_I2C_Master_Receive(hi2c, device_addr, data, len, I2C_TIMEOUT_DEFAULT);
+}
+
+/**
+ * @brief             Запись байта в регистр LM75 по I2C
+ * @param hi2c        Указатель на обработчик I2C
+ * @param device_addr Адрес устройства
+ * @param reg_addr    Адрес регистра
+ * @param data        Записываемый байт
+ * @return            Статус операции HAL
+ */
+static HAL_StatusTypeDef lm75_i2c_write_reg(I2C_HandleTypeDef *hi2c, uint8_t device_addr,
+                                            uint8_t reg_addr, uint8_t data)
+{
+    uint8_t buffer[2] = {reg_addr, data};
+
+    return HAL_I2C_Master_Transmit(hi2c, device_addr, buffer, 2, I2C_TIMEOUT_DEFAULT);
+}
 
 /**
  * @brief       Инициализация датчика температуры LM75
@@ -55,7 +94,7 @@ LM75_StateTypeDef LM75_ApplyConfig(LM75_HandleTypeDef *hlm75)
     reg_config |= (hlm75->config.comparator_interrupt & 0x01U) << 1;
     reg_config |= (hlm75->config.shutdown_mode & 0x01U) << 0;
 
-    if (I2C_write_byte(hlm75->hi2c, hlm75->addr, LM75_REG_CONFIG, reg_config) != HAL_OK)
+    if (lm75_i2c_write_reg(hlm75->hi2c, hlm75->addr, LM75_REG_CONFIG, reg_config) != HAL_OK)
     {
         hlm75->state = LM75_STATE_ERROR;
         return LM75_STATE_ERROR;
@@ -81,7 +120,7 @@ float LM75_ReadTemp(LM75_HandleTypeDef *hlm75)
         return 0.0f;
     }
 
-    if (I2C_read_data(hlm75->hi2c, hlm75->addr, LM75_REG_TEMP, data, LM75_DATA_SIZE) != HAL_OK)
+    if (lm75_i2c_read_reg(hlm75->hi2c, hlm75->addr, LM75_REG_TEMP, data, LM75_DATA_SIZE) != HAL_OK)
     {
         hlm75->state = LM75_STATE_ERROR;
         return 0.0f;
@@ -115,7 +154,7 @@ uint8_t LM75_GetConfig(LM75_HandleTypeDef *hlm75)
         return 0;
     }
 
-    if (I2C_read_byte(hlm75->hi2c, hlm75->addr, LM75_REG_CONFIG, &config) != HAL_OK)
+    if (lm75_i2c_read_reg(hlm75->hi2c, hlm75->addr, LM75_REG_CONFIG, &config, 1) != HAL_OK)
     {
         hlm75->state = LM75_STATE_ERROR;
         return 0;
@@ -152,7 +191,7 @@ LM75_StateTypeDef LM75_SetConfig(LM75_HandleTypeDef *hlm75, LM75_ConfigTypedef *
     reg_config |= (hlm75->config.comparator_interrupt & 0x01U) << 1;
     reg_config |= (hlm75->config.shutdown_mode & 0x01U) << 0;
 
-    if (I2C_write_byte(hlm75->hi2c, hlm75->addr, LM75_REG_CONFIG, reg_config) != HAL_OK)
+    if (lm75_i2c_write_reg(hlm75->hi2c, hlm75->addr, LM75_REG_CONFIG, reg_config) != HAL_OK)
     {
         hlm75->state = LM75_STATE_ERROR;
         return LM75_STATE_ERROR;
@@ -170,6 +209,7 @@ void LM75_PrintTemp(float temp)
 {
     int int_part = (int)temp;
     int frac_part = (int)((temp - int_part) * 100);
+
     if (frac_part < 0)
     {
         frac_part = -frac_part;

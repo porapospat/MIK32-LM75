@@ -1,13 +1,13 @@
 /*
  * @file:   lm75.h
- * @brief:  Реализация библиотеки датчика температуры LM75
+ * @brief:  Библиотека для работы с датчиком температуры LM75
  */
 
 #ifndef __LM75_H__
 #define __LM75_H__
 
 /* Includes ------------------------------------------------------------------*/
-#include "mik32_lm75/bus_i2c.h"
+#include "mik32_hal_i2c.h"
 
 /* Exported defines ----------------------------------------------------------*/
 #define LM75_ADDR          0x4A
@@ -62,8 +62,8 @@ typedef enum
  */
 typedef enum
 {
-    LM75_SHUTDOWN_DISABLE = 0,   /* Нормальный режим */
-    LM75_SHUTDOWN_ENABLE = 1     /* Режим пониженного потребления */
+    LM75_SHUTDOWN_DISABLE = 0, /* Нормальный режим */
+    LM75_SHUTDOWN_ENABLE = 1    /* Режим пониженного потребления */
 } LM75_ShutdownModeTypeDef;
 
 /**
@@ -132,6 +132,5 @@ LM75_StateTypeDef LM75_SetConfig(LM75_HandleTypeDef *hlm75, LM75_ConfigTypedef *
  * @param temp Значение температуры в градусах Цельсия
  */
 void LM75_PrintTemp(float temp);
-
 
 #endif /* __LM75_H__ */

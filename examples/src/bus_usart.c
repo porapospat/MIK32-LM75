@@ -1,10 +1,10 @@
 /*
  * @file:   bus_usart.c
- * @brief:  Реализация библиотеки USART
+ * @brief:  Вспомогательный драйвер USART для примера
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "mik32_lm75/bus_usart.h"
+#include "bus_usart.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
@@ -13,7 +13,7 @@
 
 /**
  * @brief        Инициализация USART0
- * @param husart Указатель на структуру обработчика USART 
+ * @param husart Указатель на структуру обработчика USART
  */
 void USART_Init(USART_HandleTypeDef *husart)
 {
@@ -48,13 +48,13 @@ void USART_Init(USART_HandleTypeDef *husart)
     husart->Interrupt.rxneie = Disable;
     husart->Interrupt.tcie = Disable;
     husart->Interrupt.txeie = Disable;
-    husart->Modem.rts = Disable; 
-    husart->Modem.cts = Disable;  
-    husart->Modem.dtr = Disable; 
-    husart->Modem.dcd = Disable;  
-    husart->Modem.dsr = Disable;  
-    husart->Modem.ri = Disable;   
-    husart->Modem.ddis = Disable; 
+    husart->Modem.rts = Disable;
+    husart->Modem.cts = Disable;
+    husart->Modem.dtr = Disable;
+    husart->Modem.dcd = Disable;
+    husart->Modem.dsr = Disable;
+    husart->Modem.ri = Disable;
+    husart->Modem.ddis = Disable;
     husart->baudrate = BAUDRATE;
 
     HAL_USART_Init(husart);

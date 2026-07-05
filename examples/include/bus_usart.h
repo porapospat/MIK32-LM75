@@ -1,6 +1,6 @@
 /*
  * @file:   bus_usart.h
- * @brief:  Реализация библиотеки USART
+ * @brief:  Вспомогательный драйвер USART для примера
  */
 
 #ifndef __BUS_USART_H__
@@ -18,7 +18,7 @@
 
 /**
  * @brief        Инициализация USART0
- * @param husart Указатель на структуру обработчика USART 
+ * @param husart Указатель на структуру обработчика USART
  */
 void USART_Init(USART_HandleTypeDef *husart);
 

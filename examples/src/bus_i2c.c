@@ -1,10 +1,10 @@
 /*
  * @file:   bus_i2c.c
- * @brief:  Реализация библиотеки I2C
+ * @brief:  Вспомогательный драйвер I2C для примера
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "mik32_lm75/bus_i2c.h"
+#include "bus_i2c.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
@@ -13,7 +13,7 @@
 
 /**
  * @brief      Инициализация I2C
- * @param I2Cx Указатель на структуру обработчика I2C 
+ * @param I2Cx Указатель на структуру обработчика I2C
  */
 void I2C_Init(I2C_HandleTypeDef *I2Cx)
 {
@@ -40,7 +40,7 @@ void I2C_Init(I2C_HandleTypeDef *I2Cx)
 
 /**
  * @brief             Запись байта
- * @param hi2c        Указатель на структуру обработчика I2C 
+ * @param hi2c        Указатель на структуру обработчика I2C
  * @param device_addr Адрес ведомого устройства
  * @param reg_addr    Адрес регистра
  * @param data        Байт данных для записи
@@ -53,7 +53,7 @@ HAL_StatusTypeDef I2C_write_byte(I2C_HandleTypeDef *hi2c, uint8_t device_addr, u
 
 /**
  * @brief             Чтение байта
- * @param hi2c        Указатель на структуру обработчика I2C 
+ * @param hi2c        Указатель на структуру обработчика I2C
  * @param device_addr Адрес ведомого устройства
  * @param reg_addr    Адрес регистра
  * @param data        Указатель на буфер для прочитанного байта
@@ -67,7 +67,7 @@ HAL_StatusTypeDef I2C_read_byte(I2C_HandleTypeDef *hi2c, uint8_t device_addr,
 
 /**
  * @brief             Чтение данных по I2C
- * @param hi2c        Указатель на структуру обработчика I2C 
+ * @param hi2c        Указатель на структуру обработчика I2C
  * @param device_addr Адрес ведомого устройства
  * @param reg_addr    Адрес регистра
  * @param data        Буфер для копирования прочитанных данных
@@ -103,7 +103,7 @@ HAL_StatusTypeDef I2C_read_data(I2C_HandleTypeDef *hi2c, uint8_t device_addr,
 
 /**
  * @brief             Запись данных по I2C
- * @param hi2c        Указатель на структуру обработчика I2C 
+ * @param hi2c        Указатель на структуру обработчика I2C
  * @param device_addr Адрес ведомого устройства
  * @param reg_addr    Адрес регистра
  * @param data        Буфер с данными для записи

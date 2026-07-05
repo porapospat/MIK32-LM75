@@ -5,11 +5,11 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "mik32_lm75/board.h"
-#include "mik32_lm75/bus_i2c.h"
-#include "mik32_lm75/bus_usart.h"
-#include "mik32_lm75/lm75.h"
-#include "mik32_lm75/ssd1306.h"
+#include "board.h"
+#include "bus_i2c.h"
+#include "bus_usart.h"
+#include "ssd1306.h"
+#include "lm75.h"
 
 /* Defines -------------------------------------------------------------------*/
 #define DELAY_MS  500
@@ -30,9 +30,9 @@ int main(void)
 
     while (1)
     {
-        //LM75_PrintTemp(LM75_ReadTemp(&hlm75));         /* Вывод температуры в UART     *
-        SSD1306_WriteTemp(&hi2c, LM75_ReadTemp(&hlm75)); /* Вывод температуры на дисплей */
-        HAL_Delay(DELAY_MS);
+        //LM75_PrintTemp(LM75_ReadTemp(&hlm75));         /* Вывод температуры в UART     */
+        SSD1306_WriteTemp(&hi2c, LM75_ReadTemp(&hlm75)); /* Вывод температуры на SSD1306 */
+        HAL_DelayMs(DELAY_MS);
     }
 }
 
@@ -40,7 +40,6 @@ static void periph_Init(void)
 {
     USART_Init(&husart);
     I2C_Init(&hi2c);
-
     SSD1306_Init(&hi2c);
     LM75_Init(&hlm75, &hi2c, LM75_ADDR);
 }

@@ -1,10 +1,10 @@
 /*
  * @file:   ssd1306.c
- * @brief:  Библиотека для дисплея SSD1306 (128x32)
+ * @brief:  Обёртка над HAL для дисплея SSD1306 
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "mik32_lm75/ssd1306.h"
+#include "ssd1306.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
@@ -13,23 +13,22 @@
 
 /**
  * @brief      Инициализация SSD1306
- * @param hi2c Указатель на структуру обработчика I2C интерфейса
+ * @param hi2c Указатель на структуру обработчика I2C
  */
 void SSD1306_Init(I2C_HandleTypeDef *hi2c)
 {
     /* Задержка для включения экрана */
     for (volatile int i = 0; i < 1000; i++);
 
-    /* Инициализация */
+    /* Инициализация дисплея */
     HAL_SSD1306_Init(hi2c, BRIGHTNESS_FULL);
-
-    /* Очистка */
+    /* Очистка экрана */
     SSD1306_Clear(hi2c);
 }
 
 /**
  * @brief      Вывод значения температуры с учётом знака
- * @param hi2c Указатель на структуру обработчика I2C интерфейса
+ * @param hi2c Указатель на структуру обработчика I2C
  * @param temp Значение температуры в градусах Цельсия
  */
 void SSD1306_WriteTemp(I2C_HandleTypeDef *hi2c, float temp)
@@ -86,8 +85,8 @@ void SSD1306_WriteTemp(I2C_HandleTypeDef *hi2c, float temp)
 }
 
 /**
- * @brief      Вывод сообщения об ошибке на дисплей (формат --.--)
- * @param hi2c Указатель на структуру обработчика I2C интерфейса
+ * @brief      Вывод сообщения об ошибке на дисплей 
+ * @param hi2c Указатель на структуру обработчика I2C
  */
 void SSD1306_WriteError(I2C_HandleTypeDef *hi2c)
 {
@@ -108,7 +107,7 @@ void SSD1306_WriteError(I2C_HandleTypeDef *hi2c)
 
 /**
  * @brief            Вывод на дисплей заданного символа
- * @param hi2c       Указатель на структуру обработчика I2C интерфейса
+ * @param hi2c       Указатель на структуру обработчика I2C
  * @param start_col  Номер стартовой колонки
  * @param end_col    Номер конечной колонки
  * @param start_page Номер стартовой страницы
@@ -124,7 +123,7 @@ void SSD1306_WriteSymbol(I2C_HandleTypeDef *hi2c, uint8_t start_col, uint8_t end
 
 /**
  * @brief      Очистка всего экрана в горизонтальном режиме
- * @param hi2c Указатель на структуру обработчика I2C интерфейса
+ * @param hi2c Указатель на структуру обработчика I2C
  */
 void SSD1306_Clear(I2C_HandleTypeDef *hi2c)
 {
